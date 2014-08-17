@@ -267,23 +267,15 @@
 
             var selectedBar = d3.select("#" + k.id).select(".part" + m).select(".mainbars").selectAll(".mainbar").filter(function (d, i) { return (i == s); });
 
-            selectedBar.select(".mainrect").classed("selected",true);
-            selectedBar.select(".barlabel").classed("selected",true);//.style('font-weight', 'bold');
-            selectedBar.select(".barvalue").classed("selected", true)//.style('font-weight', 'bold');
-            selectedBar.select(".barpercent").classed("selected", true)//.style('font-weight', 'bold');
+            selectedBar.selectAll('.mainrect,.barlabel,.barvalue,.barpercent').classed("selected", true);
         });
     };
 
     bP.deSelectSegment = function (data, m, s) {
         data.forEach(function (k) {
             transition(visualize(k.data), k.id);
-
             var selectedBar = d3.select("#" + k.id).select(".part" + m).select(".mainbars").selectAll(".mainbar").filter(function (d, i) { return (i == s); });
-
-            selectedBar.select(".mainrect").classed("selected",false);
-            selectedBar.select(".barlabel").classed("selected", false);
-            selectedBar.select(".barvalue").classed("selected", false);
-            selectedBar.select(".barpercent").classed("selected", false);
+            selectedBar.selectAll(".mainrect,.barlabel,.barvalue,.barpercent").classed("selected", false);
         });
     };
     this.bP = bP;
