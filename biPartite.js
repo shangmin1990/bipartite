@@ -10,7 +10,6 @@
         barpercentColumn: [-10, 160],
         headerX: 108,
         headerY: -20,
-        headerFontSize: "20",
         transitionWidth: 250,
         height: 300,
         sortbyKey: false
@@ -134,8 +133,9 @@
 
     function drawPart(data, id, p) {
         d3.select("#" + id).append("g").attr("class", "part" + p).attr("transform", "translate(" + (p * (me.options.transitionWidth + mainRectWidth)) + ",0)");
-        d3.select("#" + id).select(".part" + p).append("g").attr("class", "subbars");
-        d3.select("#" + id).select(".part" + p).append("g").attr("class", "mainbars");
+        var el = d3.select("#" + id).select(".part" + p);
+        el.append("g").attr("class", "subbars");
+        el.append("g").attr("class", "mainbars");
 
         var mainbar = d3.select("#" + id).select(".part" + p).select(".mainbars").selectAll(".mainbar").data(data.mainBars[p])
 			.enter().append("g").attr("class", "mainbar");
@@ -143,23 +143,24 @@
         mainbar.append("rect").attr("class", "mainrect")
 			.attr("x", 0).attr("y", function (d) { return d.middle - d.height / 2; })
 			.attr("width", mainRectWidth).attr("height", function (d) { return d.height; })
-            //.style("shape-rendering", "auto")
-			//.style("fill-opacity", 0).style("stroke-width", "0.5").style("stroke", "black").style("stroke-opacity", 0);
 
+        //draw bar label
         mainbar.append("text").attr("class", "barlabel")
 			.attr("x", me.options.labelColumn[p]).attr("y", function (d) { return d.middle + 5; })
 			.text(function (d, i) { return data.keys[p][i]; })
 			.attr("text-anchor", "start");
 
+        //draw count label
         mainbar.append("text").attr("class", "barvalue")
 			.attr("x", me.options.valueColumn[p]).attr("y", function (d) { return d.middle + 5; })
 			.text(function (d, i) { return d.value; })
 			.attr("text-anchor", "end");
 
+        //draw percentage label
         mainbar.append("text").attr("class", "barpercent")
 			.attr("x", me.options.barpercentColumn[p]).attr("y", function (d) { return d.middle + 5; })
 			.text(function (d, i) { return "( " + Math.round(100 * d.percent) + "%)"; })
-			.attr("text-anchor", "end").style("fill", "grey");
+			.attr("text-anchor", "end");
 
         d3.select("#" + id).select(".part" + p).select(".subbars")
 			.selectAll(".subbar").data(data.subBars[p]).enter()
@@ -178,15 +179,13 @@
 
     function drawHeader(header, id) {
         d3.select("#" + id).append("g").attr("class", "header").append("text").text(header[2])
-			.style("font-size", me.options.headerFontSize).attr("x", me.options.headerX).attr("y", me.options.headerY).style("text-anchor", "middle")
-			.style("font-weight", "bold");
+			.attr("x", me.options.headerX).attr("y", me.options.headerY);
 
         [0, 1].forEach(function (d) {
             var h = d3.select("#" + id).select(".part" + d).append("g").attr("class", "header");
 
-            h.append("text").text(header[d]).attr("x", (me.options.labelColumn[d] - 5)).attr("y", -5).style("fill", "grey");
-
-            h.append("text").text("Count").attr("x", (me.options.valueColumn[d] - 10)).attr("y", -5).style("fill", "grey");
+            h.append("text").text(header[d]).attr("x", (me.options.labelColumn[d] - 5)).attr("y", -5);
+            h.append("text").text("Count").attr("x", (me.options.valueColumn[d] - 10)).attr("y", -5);
 
             h.append("line").attr("x1", me.options.labelColumn[d] - 10).attr("y1", -2).attr("x2", me.options.barpercentColumn[d] + 10).attr("y2", -2)
 				.style("stroke", "black").style("stroke-width", "1").style("shape-rendering", "crispEdges");
@@ -203,12 +202,8 @@
         mainbar.select(".mainrect").transition().duration(500)
 			.attr("y", function (d) { return d.middle - d.height / 2; }).attr("height", function (d) { return d.height; });
 
-        mainbar.select(".barlabel").transition().duration(500)
-			.attr("y", function (d) { return d.middle + 5; });
-
-        mainbar.select(".barvalue").transition().duration(500)
-			.attr("y", function (d) { return d.middle + 5; }).text(function (d, i) { return d.value; });
-
+        mainbar.select(".barlabel").transition().duration(500).attr("y", function (d) { return d.middle + 5; });
+        mainbar.select(".barvalue").transition().duration(500).attr("y", function (d) { return d.middle + 5; }).text(function (d, i) { return d.value; });
         mainbar.select(".barpercent").transition().duration(500)
 			.attr("y", function (d) { return d.middle + 5; })
 			.text(function (d, i) { return "( " + Math.round(100 * d.percent) + "%)"; });
@@ -267,7 +262,7 @@
 
             var selectedBar = d3.select("#" + k.id).select(".part" + m).select(".mainbars").selectAll(".mainbar").filter(function (d, i) { return (i == s); });
 
-            selectedBar.selectAll('.mainrect,.barlabel,.barvalue,.barpercent').classed("selected", true);
+            selectedBar.selectAll('.mainrect, .barlabel, .barvalue, .barpercent').classed("selected", true);
         });
     };
 
@@ -275,7 +270,7 @@
         data.forEach(function (k) {
             transition(visualize(k.data), k.id);
             var selectedBar = d3.select("#" + k.id).select(".part" + m).select(".mainbars").selectAll(".mainbar").filter(function (d, i) { return (i == s); });
-            selectedBar.selectAll(".mainrect,.barlabel,.barvalue,.barpercent").classed("selected", false);
+            selectedBar.selectAll(".mainrect, .barlabel, .barvalue, .barpercent").classed("selected", false);
         });
     };
     this.bP = bP;
