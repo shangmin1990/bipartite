@@ -17,31 +17,38 @@
     };
 
     /**
-     *  setOptions
-     * @public
+     *  sets Options
+     * @param {object} options an object containing options
      */
     bP.setOptions = function (options) {
         me.options = options;
     };
+
+    /**
+   *  partData
+   * @public
+   * From t he original data set, creates two opposing arrays containing the counts of each corresponding record on each side.
+   */
     bP.partData = function (data, p) {
         var sData = {};
 
-        var v1 = d3.set(
-                data.map(function (d) { return d[0]; }))
-               .values();
+        // gets unique columns names (first element in array) - In Bipartite Parlance this is the U-Set
+        var v1 = d3.set(data.map(function (d) { return d[0]; })).values();
+
         if (me.options.sortbyKey) {
             v1 = v1.sort();
         }
+        // gets unique destination column name (second element in array) - In Bipartite Parlance this is the V-Set
+        var v2 = d3.set(data.map(function (d) { return d[1]; })).values();
 
-        var v2 = d3.set(data.map(function (d) { return d[1]; }))
-            .values();
         if (me.options.sortbyKey) {
             v2 = v2.sort(d3.descending());
         }
         sData.keys = [v1, v2];
 
+        // creates an array of arrays with all values set to 0
         sData.data = [sData.keys[0].map(function () { return sData.keys[1].map(function () { return 0; }); }),
-						sData.keys[1].map(function () { return sData.keys[0].map(function () { return 0; }); })
+					  sData.keys[1].map(function () { return sData.keys[0].map(function () { return 0; }); })
         ];
 
         data.forEach(function (d) {
@@ -135,8 +142,9 @@
 
         mainbar.append("rect").attr("class", "mainrect")
 			.attr("x", 0).attr("y", function (d) { return d.middle - d.height / 2; })
-			.attr("width", mainRectWidth).attr("height", function (d) { return d.height; }).style("shape-rendering", "auto")
-			.style("fill-opacity", 0).style("stroke-width", "0.5").style("stroke", "black").style("stroke-opacity", 0);
+			.attr("width", mainRectWidth).attr("height", function (d) { return d.height; })
+            //.style("shape-rendering", "auto")
+			//.style("fill-opacity", 0).style("stroke-width", "0.5").style("stroke", "black").style("stroke-opacity", 0);
 
         mainbar.append("text").attr("class", "barlabel")
 			.attr("x", me.options.labelColumn[p]).attr("y", function (d) { return d.middle + 5; })
@@ -246,6 +254,7 @@
             });
         });
     };
+
     bP.selectSegment = function (data, m, s) {
         data.forEach(function (k) {
             var newdata = { keys: [], data: [] };
@@ -258,22 +267,23 @@
 
             var selectedBar = d3.select("#" + k.id).select(".part" + m).select(".mainbars").selectAll(".mainbar").filter(function (d, i) { return (i == s); });
 
-            selectedBar.select(".mainrect").style("stroke-opacity", 1);
-            selectedBar.select(".barlabel").style('font-weight', 'bold');
-            selectedBar.select(".barvalue").style('font-weight', 'bold');
-            selectedBar.select(".barpercent").style('font-weight', 'bold');
+            selectedBar.select(".mainrect").classed("selected",true);
+            selectedBar.select(".barlabel").classed("selected",true);//.style('font-weight', 'bold');
+            selectedBar.select(".barvalue").classed("selected", true)//.style('font-weight', 'bold');
+            selectedBar.select(".barpercent").classed("selected", true)//.style('font-weight', 'bold');
         });
     };
+
     bP.deSelectSegment = function (data, m, s) {
         data.forEach(function (k) {
             transition(visualize(k.data), k.id);
 
             var selectedBar = d3.select("#" + k.id).select(".part" + m).select(".mainbars").selectAll(".mainbar").filter(function (d, i) { return (i == s); });
 
-            selectedBar.select(".mainrect").style("stroke-opacity", 0);
-            selectedBar.select(".barlabel").style('font-weight', 'normal');
-            selectedBar.select(".barvalue").style('font-weight', 'normal');
-            selectedBar.select(".barpercent").style('font-weight', 'normal');
+            selectedBar.select(".mainrect").classed("selected",false);
+            selectedBar.select(".barlabel").classed("selected", false);
+            selectedBar.select(".barvalue").classed("selected", false);
+            selectedBar.select(".barpercent").classed("selected", false);
         });
     };
     this.bP = bP;
