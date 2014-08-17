@@ -7,7 +7,7 @@
         colors: ["#3366CC", "#DC3912", "#FF9900", "#109618", "#990099", "#0099C6"],
         labelColumn: [-130, 40], //Column positions of labels.
         valueColumn: [-50, 100],
-        barpercentColumn: [-10, 160],
+        barpercentColumn: [-10, 160],// x distance from left of main rect
         headerX: 108,
         headerY: -20,
         transitionWidth: 250,
@@ -125,7 +125,7 @@
 
     function arcTween(a) {
         var i = d3.interpolate(this._current, a);
-        this._current = i(0);
+        this._current = i(0);https://github.com/damiangreen/EnvoyCustomerRegistration
         return function (t) {
             return edgePolygon(i(t));
         };
@@ -227,7 +227,15 @@
         transitionEdges(data, id);
     }
 
-    bP.draw = function (data, svg) {
+    bP.draw = function (data, containerEl) {
+
+        var svg = d3.select(containerEl)
+           .append("svg")
+           .attr('width', me.options.width)
+           .attr('height', (me.options.height + me.options.margin.b + me.options.margin.t))
+           .append("g")
+           .attr("transform", "translate(" + me.options.margin.l + "," + me.options.margin.t + ")");
+
         data.forEach(function (biP, s) {
             svg.append("g")
 				.attr("id", biP.id)
