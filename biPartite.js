@@ -48,9 +48,9 @@
                 v1 = v1.sort();
             }
             sData.parent = [v1, []];
-
-            for(var i=0;i < v1.length; i++){
-                sData.parent[1][i] = 100;
+            var children = data.child;
+            for(var i = 0; i < v1.length; i++){
+                sData.parent[1][i] = d3.sum(children[i].count);
             }
 
             return sData;
