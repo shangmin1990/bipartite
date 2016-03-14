@@ -7,7 +7,7 @@ rect {
 }
 
 .mainrect {
-    fill-opacity: 0;
+    /*fill-opacity: 0;*/
     stroke-width: 0.5;
     stroke: black;
     stroke-opacity: 0;
