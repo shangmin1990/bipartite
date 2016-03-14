@@ -283,7 +283,7 @@
 
         bP.draw = function (data, containerEl) {
 
-            var svg = d3.select(containerEl)
+            var svg = d3.select('#'+containerEl)
                .append("svg")
                .attr('width', me.options.width)
                .attr('height', (me.options.height + me.options.margin.b + me.options.margin.t))

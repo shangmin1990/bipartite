@@ -88,5 +88,5 @@ define(['bP'], function(){
             height : 450,
             margin : { b: 0, t: 40, l: 170, r: 50 }
         });
-        bP.draw(data,'body');
+        bP.draw(data,'container');
 })
